@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilo Professionale | [Il Tuo Nome]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #70FFE9;
+            --bg: #0A192F;
+            --text: #CCD6F6;
+            --modal-bg: rgba(10, 25, 47, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section 3D */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .canvas-container {
+            position: absolute!important;
+            width: 100%!important;
+            height: 100%!important;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+        }
+
+        .project-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .project-card:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateZ(20px);
+        }
+
+        /* Skills Section */
+        .skills-chart {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 4rem 2rem;
+        }
+
+        .skill-item {
+            text-align: center;
+            padding: 2rem;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Contact Form */
+        .contact-section {
+            padding: 4rem 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-input {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: white;
+        }
+
+        .glow-button {
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            padding: 1rem 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: filter 0.3s;
+        }
+
+        .glow-button:hover {
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: var(--modal-bg);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--bg);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0); /* Start scaled out */
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .modal.active .modal-content {
+          transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        /* Secondary Spheres */
+        .secondary-sphere {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+            opacity: 0.8;
+        }
+
+        .secondary-sphere:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+        }
+       /* Banner Slider */
+        .banner-slider {
+           display: flex;
+           justify-content: space-around;
+           padding: 4rem 2rem;
+           overflow: hidden;
+        }
+
+        .banner-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            width: 30%;
+            text-align: center;
+           transform: translateX(-100%); /* Start off-screen */
+           opacity: 0;
+           transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.8s; /* Custom transition */
+        }
+
+        .banner-item.active {
+          transform: translateX(0);
+          opacity: 1;
+        }
+
+        .banner-item h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .banner-item p {
+            font-size: 0.9rem;
+        }
+
+
+    </style>
+</head>
+<body>
+    <section id="hero">
+        <div class="canvas-container"></div>
+        <div class="hero-content">
+            <h1 class="reveal">Innovazione Digitale<br>Meet [Il Tuo Nome]</h1>
+            <p class="reveal">Creative Developer & Tech Visionary</p>
+        </div>
+        <!-- Secondary Spheres -->
+        <div class="secondary-sphere" data-modal="modal-bio" style="top: 20%; left: 15%;"></div>
+        <div class="secondary-sphere" data-modal="modal-skills" style="top: 35%; right: 20%;"></div>
+        <div class="secondary-sphere" data-modal="modal-projects" style="bottom: 25%; left: 30%;"></div>
+    </section>
+
+    <section class="projects-grid">
+        <div class="project-card reveal">
+            <h3>Progetto 1</h3>
+            <p>Descrizione progetto innovativo</p>
+        </div>
+        <!-- Aggiungi altri progetti -->
+    </section>
+
+    <section class="skills-chart">
+        <div class="skill-item reveal">WebGL</div>
+        <div class="skill-item reveal">React</div>
+        <div class="skill-item reveal">AI Integration</div>
+    </section>
+
+    <section class="contact-section">
+        <form id="contact-form">
+            <input class="contact-input reveal" type="text" placeholder="Nome">
+            <input class="contact-input reveal" type="email" placeholder="Email">
+            <textarea class="contact-input reveal" rows="5" placeholder="Messaggio"></textarea>
+            <button type="submit" class="glow-button reveal">Invia Messaggio</button>
+        </form>
+    </section>
+
+    <!-- Banner Slider -->
+    <section class="banner-slider">
+      <div class="banner-item">
+        <h3>Esperienza</h3>
+         <p>Anni di esperienza nel settore e progetti di successo</p>
+      </div>
+      <div class="banner-item">
+        <h3>Certificazioni</h3>
+        <p>Certificazioni e specializzazioni per una qualità superiore</p>
+      </div>
+        <div class="banner-item">
+            <h3>Passione</h3>
+            <p>Amore per l'innovazione e la tecnologia</p>
+        </div>
+    </section>
+
+    <!-- Modals -->
+    <div class="modal" id="modal-bio">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Biografia</h2>
+            <p>Qui la tua biografia professionale. Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-skills">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Skills</h2>
+            <p>Elenco delle tue competenze. HTML, CSS, JavaScript, React, Node.js ecc...</p>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-projects">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Progetti</h2>
+             <p>Qui i dettagli dei tuoi progetti più significativi, link al codice, demo etc...</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
+
+    <script>
+        // Three.js Scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.querySelector('.canvas-container').appendChild(renderer.domElement);
+
+        // Geometry
+        const geometry = new THREE.IcosahedronGeometry(3, 2);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x70FFE9,
+            shininess: 100,
+            wireframe: true
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        // Lights
+        const light = new THREE.PointLight(0x70FFE9, 1);
+        light.position.set(10, 10, 10);
+        scene.add(light);
+
+        camera.position.z = 8;
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            mesh.rotation.x += 0.005;
+            mesh.rotation.y += 0.005;
+            renderer.render(scene, camera);
+
+             // Rotate secondary spheres
+            document.querySelectorAll('.secondary-sphere').forEach(sphere => {
+                sphere.rotation += 0.001;
+                sphere.style.transform = `rotate(${sphere.rotation * 200}deg) translateZ(0px)`;
+           });
+        }
+        animate();
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.utils.toArray('.reveal').forEach(element => {
+            gsap.from(element, {
+                scrollTrigger: {
+                    trigger: element,
+                    start: "top 80%"
+                },
+                duration: 1,
+                opacity: 0,
+                y: 50,
+                ease: "power4.out"
+            });
+        });
+
+        // Resize Handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Modal Logic
+        const secondarySpheres = document.querySelectorAll('.secondary-sphere');
+        const modals = document.querySelectorAll('.modal');
+
+        secondarySpheres.forEach(sphere => {
+            sphere.addEventListener('click', () => {
+                const modalId = sphere.dataset.modal;
+                const modal = document.getElementById(modalId);
+                 modal.style.display = "flex";
+                modal.classList.add("active")
+                
+            });
+        });
+
+         modals.forEach(modal => {
+                modal.querySelector(".modal-close").addEventListener('click', () => {
+                 modal.style.display = "none";
+                 modal.classList.remove("active");
+            });
+        });
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+             event.target.style.display = "none";
+             event.target.classList.remove("active");
+            }
+         }
+        
+          // Banner Slider animation
+          const bannerItems = document.querySelectorAll('.banner-item');
+          bannerItems.forEach((item, index) => {
+           gsap.to(item, {
+              scrollTrigger: {
+                trigger: item,
+                start: "top 90%", // Adjust start if needed
+              },
+              delay: index * 0.2, // Stagger animation
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              ease: "power3.out",
+              onComplete: () => item.classList.add('active'), // Add active class
+           });
+           });
+
+
+    </script>
+</body>
+</html>
