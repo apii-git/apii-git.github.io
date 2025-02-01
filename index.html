@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VirtualCV</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #70FFE9;
+            --bg: #0A192F;
+            --text: #CCD6F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section 3D */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .canvas-container {
+            position: absolute !important;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), #fff);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Button Styles */
+        .glow-button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(45deg, var(--primary), #fff);
+            color: var(--bg);
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--primary);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            position: relative; /* Required for ::before pseudo-element */
+            overflow: hidden; /* Ensure glow doesn't overflow */
+            z-index: 1; /* Ensure text is above the glow */
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 0 20px var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Animation Reveal */
+        .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: reveal 1s ease forwards;
+        }
+
+        @keyframes reveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <section id="hero">
+        <div class="canvas-container"></div>
+        <div class="hero-content">
+            <h1 class="reveal"> Virtual CV<br>Perani Alessandro</h1>
+            <p class="reveal">Creative Developer & Tech Visionary</p>
+        </div>
+    </section>
+    <section style="padding: 2rem; text-align:center;">
+        <a href="app.html">
+           <button class="glow-button reveal">Vai agli Approfondimenti</button>
+        </a>
+      </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
+
+    <script>
+        // Three.js Scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.querySelector('.canvas-container').appendChild(renderer.domElement);
+
+        // Geometry
+        const geometry = new THREE.IcosahedronGeometry(3, 2);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x70FFE9,
+            shininess: 100,
+            wireframe: true
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0x404040); // Luce ambientale
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0x70FFE9, 1);
+        pointLight.position.set(10, 10, 10);
+        scene.add(pointLight);
+
+        camera.position.z = 8;
+
+        // Variabili per l'interazione con il mouse
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetRotationX = 0;
+        let targetRotationY = 0;
+        const rotationSpeed = 0.0005;
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Applica la rotazione in base alla posizione del mouse
+            mesh.rotation.x += (targetRotationX - mesh.rotation.x) * 0.05;
+            mesh.rotation.y += (targetRotationY - mesh.rotation.y) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Interazione con il mouse
+        document.addEventListener('mousemove', (e) => {
+            // Calcola la posizione del mouse normalizzata
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+
+            // Imposta la rotazione target in base alla posizione del mouse
+            targetRotationX = mouseY * rotationSpeed * 100;
+            targetRotationY = mouseX * rotationSpeed * 100;
+        });
+
+        // Resize Handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
