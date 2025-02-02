@@ -93,4 +93,7 @@
 
         <p>Un ringraziamento speciale a tutte le persone che mi hanno supportato e incoraggiato nel mio percorso.</p>
 
-        <p><em>
+        <p><em>Se hai domande, proposte o vuoi semplicemente fare due chiacchiere, non esitare a contattarmi.</em></p>
+    </div>
+</body>
+</html>
